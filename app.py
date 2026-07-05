@@ -41,7 +41,53 @@ st.markdown("""
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
+/* HIDE STREAMLIT BRANDING */
 
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
+/* REMOVE DEPLOY BUTTON */
+
+[data-testid="stToolbar"] {
+    display: none;
+}
+
+/* REMOVE GITHUB ICON */
+
+[data-testid="stDecoration"] {
+    display: none;
+}
+
+/* REMOVE BOTTOM RIGHT ICONS */
+
+.viewerBadge_container__1QSob {
+    display: none !important;
+}
+
+.styles_viewerBadge__1yB5_ {
+    display: none !important;
+}
+
+.viewerBadge_link__1S137 {
+    display: none !important;
+}
+
+/* REMOVE STREAMLIT FOOTER */
+
+footer:after {
+    content:'';
+    visibility:hidden;
+    display:block;
+}
 /* SIDEBAR */
 section[data-testid="stSidebar"] {
     background: linear-gradient(to bottom, #081121, #020617) !important;
