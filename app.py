@@ -38,10 +38,6 @@ st.markdown("""
 }
 
 /* HIDE STREAMLIT DEFAULT */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-/* HIDE STREAMLIT BRANDING */
 
 #MainMenu {
     visibility: hidden;
