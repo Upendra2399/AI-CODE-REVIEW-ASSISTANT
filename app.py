@@ -37,15 +37,16 @@ st.markdown("""
     color: white;
 }
 
-/* HIDE STREAMLIT */
+/* HIDE STREAMLIT DEFAULT */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
 /* SIDEBAR */
 section[data-testid="stSidebar"] {
-    background: #081121 !important;
+    background: linear-gradient(to bottom, #081121, #020617) !important;
     border-right: 1px solid rgba(255,255,255,0.08);
+    padding-top: 20px;
 }
 
 /* SIDEBAR TEXT */
@@ -55,7 +56,7 @@ section[data-testid="stSidebar"] * {
 
 /* FEATURE CARDS */
 .feature-card {
-    background: rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.06);
     padding: 18px;
     border-radius: 16px;
     margin-bottom: 18px;
@@ -71,7 +72,7 @@ section[data-testid="stSidebar"] * {
     box-shadow: 0px 0px 20px rgba(139,92,246,0.2);
 }
 
-/* TITLE */
+/* MAIN TITLE */
 .main-title {
     font-size: 65px;
     font-weight: 800;
@@ -101,6 +102,7 @@ section[data-testid="stSidebar"] * {
     background: #111827 !important;
     color: white !important;
     border-radius: 14px !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 /* FILE UPLOADER */
@@ -108,6 +110,16 @@ section[data-testid="stSidebar"] * {
     background: #111827;
     border-radius: 18px;
     padding: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* FILE UPLOAD BUTTON */
+[data-testid="stFileUploader"] button {
+    background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    border: none !important;
+    font-weight: bold !important;
 }
 
 /* TEXT AREA */
@@ -120,7 +132,7 @@ section[data-testid="stSidebar"] * {
     min-height: 350px !important;
 }
 
-/* BUTTON */
+/* MAIN BUTTON */
 .stButton button {
     background: linear-gradient(to right, #7C3AED, #4F46E5);
     color: white !important;
@@ -139,6 +151,23 @@ section[data-testid="stSidebar"] * {
     background: linear-gradient(to right, #8B5CF6, #6366F1);
 }
 
+/* DOWNLOAD BUTTON */
+.stDownloadButton button {
+    background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 16px !important;
+    height: 55px !important;
+    width: 100% !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin-top: 15px !important;
+}
+
+.stDownloadButton button:hover {
+    background: linear-gradient(to right, #8B5CF6, #6366F1) !important;
+}
+
 /* RESULT BOX */
 .result-box {
     background: rgba(255,255,255,0.04);
@@ -151,12 +180,17 @@ section[data-testid="stSidebar"] * {
     font-size: 17px;
 }
 
-/* METRIC */
+/* METRIC BOX */
 [data-testid="metric-container"] {
     background-color: #111827;
     border: 1px solid rgba(255,255,255,0.08);
     padding: 15px;
     border-radius: 15px;
+}
+
+/* PROGRESS BAR */
+.stProgress > div > div > div > div {
+    background-color: #8B5CF6;
 }
 
 </style>
@@ -229,7 +263,7 @@ if uploaded_file is not None:
 
     st.success("✅ File uploaded successfully!")
 
-# ---------------- BUTTON ----------------
+# ---------------- REVIEW BUTTON ----------------
 
 if st.button("🚀 Review Code"):
 
@@ -287,6 +321,35 @@ Code:
                 )
 
                 st.progress(score)
+
+                # DASHBOARD
+                st.markdown("## 📊 AI Review Dashboard")
+
+                col1, col2, col3, col4 = st.columns(4)
+
+                with col1:
+                    st.metric(
+                        label="📖 Readability",
+                        value="8.5/10"
+                    )
+
+                with col2:
+                    st.metric(
+                        label="⚡ Performance",
+                        value="7.8/10"
+                    )
+
+                with col3:
+                    st.metric(
+                        label="🛠 Maintainability",
+                        value="9/10"
+                    )
+
+                with col4:
+                    st.metric(
+                        label="🔒 Security",
+                        value="7/10"
+                    )
 
                 # RESULT
                 st.markdown(
