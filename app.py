@@ -4,46 +4,57 @@ from groq import Groq
 import os
 import random
 
-# ---------------- PAGE CONFIG ----------------
+# ================= PAGE CONFIG ================= #
 
 st.set_page_config(
     page_title="AI Code Review Assistant",
-    page_icon="🤖",
+    page_icon="💻",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ---------------- LOAD ENV ----------------
+# ================= LOAD API KEY ================= #
 
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
 
-# ---------------- GROQ CLIENT ----------------
+if not api_key:
+    try:
+        api_key = st.secrets["GROQ_API_KEY"]
+    except:
+        api_key = None
+
+# ================= GROQ CLIENT ================= #
 
 client = None
 
 if api_key:
     client = Groq(api_key=api_key)
 
-# ---------------- CUSTOM CSS ----------------
+# ================= CUSTOM CSS ================= #
 
 st.markdown("""
 <style>
 
+/* GOOGLE FONT */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+html, body, [class*="css"]  {
+    font-family: 'Poppins', sans-serif;
+}
+
 /* MAIN BACKGROUND */
+
 .stApp {
     background: linear-gradient(135deg, #020617, #000814);
     color: white;
 }
 
-/* HIDE STREAMLIT DEFAULT */
+/* HIDE STREAMLIT BRANDING */
 
 #MainMenu {
-    visibility: hidden;
-}
-
-footer {
     visibility: hidden;
 }
 
@@ -51,194 +62,333 @@ header {
     visibility: hidden;
 }
 
-/* REMOVE DEPLOY BUTTON */
+footer {
+    visibility: hidden;
+}
 
 [data-testid="stToolbar"] {
-    display: none;
+    display: none !important;
 }
 
-/* REMOVE GITHUB ICON */
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
 
 [data-testid="stDecoration"] {
-    display: none;
-}
-
-/* REMOVE BOTTOM RIGHT ICONS */
-
-.viewerBadge_container__1QSob {
     display: none !important;
 }
 
-.styles_viewerBadge__1yB5_ {
+div[data-testid="stToolbarActions"] {
     display: none !important;
 }
 
-.viewerBadge_link__1S137 {
+.viewerBadge_container__1QSob,
+.viewerBadge_link__1S137,
+.viewerBadge_text__1JaDK {
     display: none !important;
 }
 
-/* REMOVE STREAMLIT FOOTER */
-
-footer:after {
-    content:'';
-    visibility:hidden;
-    display:block;
-}
 /* SIDEBAR */
+
 section[data-testid="stSidebar"] {
-    background: linear-gradient(to bottom, #081121, #020617) !important;
+    background: #07101f !important;
     border-right: 1px solid rgba(255,255,255,0.08);
-    padding-top: 20px;
 }
 
 /* SIDEBAR TEXT */
+
 section[data-testid="stSidebar"] * {
     color: white !important;
 }
 
-/* FEATURE CARDS */
+/* FEATURE CARD */
+
 .feature-card {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.04);
     padding: 18px;
-    border-radius: 16px;
+    border-radius: 18px;
     margin-bottom: 18px;
     border: 1px solid rgba(255,255,255,0.08);
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 600;
     transition: 0.3s;
 }
 
 .feature-card:hover {
+    transform: translateY(-3px);
     border: 1px solid #8B5CF6;
-    transform: translateY(-2px);
-    box-shadow: 0px 0px 20px rgba(139,92,246,0.2);
+    box-shadow: 0 0 25px rgba(139,92,246,.3);
 }
 
-/* MAIN TITLE */
+/* HERO SECTION */
+
+.hero-container {
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    padding: 30px;
+
+    margin-bottom: 35px;
+
+    border-radius: 28px;
+
+    background: rgba(255,255,255,0.03);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 0 35px rgba(139,92,246,0.12);
+}
+
+/* LOGO */
+
+.main-logo {
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 52px;
+
+    background: linear-gradient(
+    135deg,
+    #9333EA,
+    #3B82F6
+    );
+
+    box-shadow:
+    0 0 40px rgba(147,51,234,.55);
+
+    animation: glow 3s infinite alternate;
+}
+
+/* LOGO GLOW */
+
+@keyframes glow {
+
+    from {
+        transform: scale(1);
+        box-shadow:
+        0 0 25px rgba(147,51,234,.4);
+    }
+
+    to {
+        transform: scale(1.05);
+        box-shadow:
+        0 0 55px rgba(59,130,246,.75);
+    }
+}
+
+/* TITLE */
+
 .main-title {
-    font-size: 65px;
-    font-weight: 800;
-    background: linear-gradient(to right, #A855F7, #3B82F6);
+
+    font-size: 68px;
+
+    font-weight: 900;
+
+    line-height: 1.1;
+
+    background: linear-gradient(
+    to right,
+    #C084FC,
+    #60A5FA
+    );
+
     -webkit-background-clip: text;
+
     -webkit-text-fill-color: transparent;
+
+    margin-bottom: 12px;
 }
 
 /* SUBTEXT */
+
 .sub-text {
+
+    font-size: 21px;
+
     color: #CBD5E1;
-    font-size: 22px;
-    margin-bottom: 30px;
+
+    line-height: 1.8;
 }
 
 /* LABELS */
+
 .stSelectbox label,
 .stTextArea label,
 .stFileUploader label {
+
     color: white !important;
+
     font-size: 18px !important;
+
     font-weight: 700 !important;
 }
 
 /* SELECT BOX */
+
 .stSelectbox > div > div {
+
     background: #111827 !important;
+
     color: white !important;
-    border-radius: 14px !important;
+
+    border-radius: 16px !important;
+
     border: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 /* FILE UPLOADER */
+
 [data-testid="stFileUploader"] {
+
     background: #111827;
-    border-radius: 18px;
+
     padding: 20px;
+
+    border-radius: 20px;
+
     border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* FILE UPLOAD BUTTON */
-[data-testid="stFileUploader"] button {
-    background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
+/* UPLOADER DARK */
+
+[data-testid="stFileUploaderDropzone"] {
+
+    background: #1E293B !important;
+
+    border: 2px dashed #8B5CF6 !important;
+
+    border-radius: 18px !important;
+}
+
+[data-testid="stFileUploaderDropzone"] * {
     color: white !important;
-    border-radius: 12px !important;
-    border: none !important;
-    font-weight: bold !important;
 }
 
 /* TEXT AREA */
+
 .stTextArea textarea {
-    background: #111827 !important;
+
+    background: #0F172A !important;
+
     color: white !important;
-    border-radius: 18px !important;
+
+    border-radius: 20px !important;
+
     border: 2px solid #8B5CF6 !important;
+
     font-size: 17px !important;
+
     min-height: 350px !important;
 }
 
-/* MAIN BUTTON */
+/* REVIEW BUTTON */
+
 .stButton button {
-    background: linear-gradient(to right, #7C3AED, #4F46E5);
+
+    background: linear-gradient(
+    to right,
+    #7C3AED,
+    #4F46E5
+    );
+
     color: white !important;
+
     border: none;
+
     border-radius: 18px;
-    height: 60px;
+
+    height: 62px;
+
     width: 100%;
+
     font-size: 22px;
-    font-weight: bold;
+
+    font-weight: 700;
+
     margin-top: 20px;
+
     transition: 0.3s;
 }
 
 .stButton button:hover {
+
     transform: scale(1.01);
-    background: linear-gradient(to right, #8B5CF6, #6366F1);
-}
 
-/* DOWNLOAD BUTTON */
-.stDownloadButton button {
-    background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 16px !important;
-    height: 55px !important;
-    width: 100% !important;
-    font-size: 18px !important;
-    font-weight: bold !important;
-    margin-top: 15px !important;
-}
-
-.stDownloadButton button:hover {
-    background: linear-gradient(to right, #8B5CF6, #6366F1) !important;
+    box-shadow: 0 0 25px rgba(139,92,246,.4);
 }
 
 /* RESULT BOX */
+
 .result-box {
+
     background: rgba(255,255,255,0.04);
+
     border-left: 5px solid #8B5CF6;
+
     padding: 30px;
-    border-radius: 18px;
+
+    border-radius: 20px;
+
     margin-top: 30px;
+
     color: white;
-    line-height: 1.8;
+
+    line-height: 1.9;
+
     font-size: 17px;
 }
 
-/* METRIC BOX */
+/* METRIC */
+
 [data-testid="metric-container"] {
-    background-color: #111827;
+
+    background: #111827;
+
     border: 1px solid rgba(255,255,255,0.08);
-    padding: 15px;
-    border-radius: 15px;
+
+    padding: 18px;
+
+    border-radius: 18px;
 }
 
-/* PROGRESS BAR */
-.stProgress > div > div > div > div {
-    background-color: #8B5CF6;
+/* DOWNLOAD BUTTON */
+
+.stDownloadButton button {
+
+    background: linear-gradient(
+    to right,
+    #9333EA,
+    #2563EB
+    ) !important;
+
+    color: white !important;
+
+    border: none !important;
+
+    border-radius: 16px !important;
+
+    height: 55px;
+
+    font-size: 18px;
+
+    font-weight: 700;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- SIDEBAR ----------------
+# ================= SIDEBAR ================= #
 
 with st.sidebar:
 
@@ -268,19 +418,34 @@ with st.sidebar:
         unsafe_allow_html=True
     )
 
-# ---------------- TITLE ----------------
+# ================= HERO SECTION ================= #
 
-st.markdown(
-    '<div class="main-title">AI Code Review Assistant</div>',
-    unsafe_allow_html=True
-)
+st.markdown("""
 
-st.markdown(
-    '<div class="sub-text">Analyze and improve your code using advanced AI review suggestions.</div>',
-    unsafe_allow_html=True
-)
+<div class="hero-container">
 
-# ---------------- INPUTS ----------------
+    <div class="main-logo">
+        💻
+    </div>
+
+    <div>
+
+        <div class="main-title">
+            AI Code Review Assistant
+        </div>
+
+        <div class="sub-text">
+            Advanced AI analysis to detect bugs, improve quality,
+            suggest best practices, and optimize your code.
+        </div>
+
+    </div>
+
+</div>
+
+""", unsafe_allow_html=True)
+
+# ================= INPUTS ================= #
 
 language = st.selectbox(
     "Select Programming Language",
@@ -297,7 +462,7 @@ code = st.text_area(
     placeholder="Paste your code here..."
 )
 
-# ---------------- FILE READ ----------------
+# ================= FILE READ ================= #
 
 if uploaded_file is not None:
 
@@ -305,14 +470,16 @@ if uploaded_file is not None:
 
     st.success("✅ File uploaded successfully!")
 
-# ---------------- REVIEW BUTTON ----------------
+# ================= REVIEW BUTTON ================= #
 
 if st.button("🚀 Review Code"):
 
     if not api_key:
-        st.error("Please add GROQ_API_KEY inside .env file")
+
+        st.error("Please add GROQ_API_KEY")
 
     elif code.strip() == "":
+
         st.warning("Please paste some code")
 
     else:
@@ -346,15 +513,13 @@ Code:
                         }
                     ],
                     temperature=0.3,
-                    max_tokens=1500
+                    max_tokens=1800
                 )
 
                 result = response.choices[0].message.content
 
-                # SUCCESS MESSAGE
                 st.success("✅ AI Review Completed Successfully!")
 
-                # SCORE
                 score = random.randint(80, 98)
 
                 st.metric(
@@ -364,45 +529,13 @@ Code:
 
                 st.progress(score)
 
-                # DASHBOARD
-                st.markdown("## 📊 AI Review Dashboard")
-
-                col1, col2, col3, col4 = st.columns(4)
-
-                with col1:
-                    st.metric(
-                        label="📖 Readability",
-                        value="8.5/10"
-                    )
-
-                with col2:
-                    st.metric(
-                        label="⚡ Performance",
-                        value="7.8/10"
-                    )
-
-                with col3:
-                    st.metric(
-                        label="🛠 Maintainability",
-                        value="9/10"
-                    )
-
-                with col4:
-                    st.metric(
-                        label="🔒 Security",
-                        value="7/10"
-                    )
-
-                # RESULT
                 st.markdown(
                     f'<div class="result-box">{result}</div>',
                     unsafe_allow_html=True
                 )
 
-                # COPYABLE OUTPUT
                 st.code(result)
 
-                # DOWNLOAD BUTTON
                 st.download_button(
                     label="📥 Download Review Report",
                     data=result,
